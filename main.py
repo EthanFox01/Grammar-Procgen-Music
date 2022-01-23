@@ -4,15 +4,15 @@ import random
 g_scale = ['1', '2', '3', '4', '5', '6', '7', '8']
 
 jumps = {
-    '1' : ['3', '5', '7'], 
-    '2' : ['1','4','5'], 
-    '3' : ['1','4','6'],
-    '4' : ['2','6','8'], 
-    '5' : ['2','3','7'], 
-    '6' : ['1','3','8'], 
-    '7' : ['3','5','8'], 
-    '8' : ['4','6','7'],
-    '*' : ['1', '2', '3', '4', '5', '6', '7', '8'],
+    '1': ['3', '5', '7'],
+    '2': ['1', '4', '5'],
+    '3': ['1', '4', '6'],
+    '4': ['2', '6', '8'],
+    '5': ['2', '3', '7'],
+    '6': ['1', '3', '8'],
+    '7': ['3', '5', '8'],
+    '8': ['4', '6', '7'],
+    '*': ['1', '2', '3', '4', '5', '6', '7', '8'],
 }
 
 grammar = {
@@ -34,19 +34,19 @@ def expand_expr(expr):
     return_list = []
     for elem in expr_list:
         if elem not in ['<quarter>', '<eighth>', '<pause>']:
-          return_list.append(elem)
+            return_list.append(elem)
     return expr_list
 
 
 def count_beats(expr):
     beats = 0
     for elem in expr:
-      if elem == '<quarter>':
-        beats += 1
-      if elem == '<eighth>':
-        beats += 0.5
-      if elem == '<pause>':
-        beats += 0.5
+        if elem == '<quarter>':
+            beats += 1
+        if elem == '<eighth>':
+            beats += 0.5
+        if elem == '<pause>':
+            beats += 0.5
     return beats
 
 
@@ -79,27 +79,28 @@ def get_user_input():
 
 def clean_fuzzer_output(expr):
     try:
-      i = expr.index('<pattern>')
-      return expr[:i]
+        i = expr.index('<pattern>')
+        return expr[:i]
     except ValueError:
-      return expr[:-1]
+        return expr[:-1]
 
 
 def fill_terminal_symbols(expr):
-  output_expr = []
-  last_note = random.choice(g_scale)
-  for symbol in expr:
-    if symbol == '<quarter>':
-        note = random.choice(jumps[last_note])
-        output_expr.append(note)
-        last_note = note
-    if symbol == '<eighth>':
-        note = random.choice(jumps[last_note])
-        output_expr.append(note + '/')
-        last_note = note
-    if symbol == '<pause>':
-        output_expr.append('*')
-  return output_expr
+    output_expr = []
+    last_note = random.choice(g_scale)
+    for symbol in expr:
+        if symbol == '<quarter>':
+            note = random.choice(jumps[last_note])
+            output_expr.append(note)
+            last_note = note
+        if symbol == '<eighth>':
+            note = random.choice(jumps[last_note])
+            output_expr.append(note + '/')
+            last_note = note
+        if symbol == '<pause>':
+            output_expr.append('*')
+    return output_expr
+
 
 def display_output(output_list):
     counter = 0
@@ -117,7 +118,8 @@ def display_output(output_list):
 
 
 def main():
-    melody = grammar_fuzzer(3)
+    measures = get_user_input()
+    melody = grammar_fuzzer(int(measures))
     melody = fill_terminal_symbols(clean_fuzzer_output(melody))
     display_output(melody)
 
